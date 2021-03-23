@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_calculator_bloc/src/Utilities/project_constants.dart';
+import 'package:flutter_calculator_bloc/src/utilities/project_constants.dart';
 import 'package:flutter_calculator_bloc/src/blocs/calculator_bloc.dart';
+import 'package:flutter_calculator_bloc/src/viewmodels/calculator_view_model.dart';
 
 class CalculatorPage extends StatefulWidget {
   CalculatorPage({Key key, this.title}) : super(key: key);
@@ -15,12 +16,11 @@ class _CalculatorPageState extends State<CalculatorPage> {
   TextEditingController _numberAController = new TextEditingController();
   TextEditingController _numberBController = new TextEditingController();
   CalculatorBloc _bloc = new CalculatorBloc();
-  CalculatorReturn _result;
-
-  _CalculatorPageState() {
-    _result = new CalculatorReturn(ProjectConstants.stringEmpty,
-        ProjectConstants.stringEmpty, ProjectConstants.stringEmpty, false);
-  }
+  CalculatorViewModel _viewModel = new CalculatorViewModel(
+      ProjectConstants.stringEmpty,
+      ProjectConstants.stringEmpty,
+      ProjectConstants.stringEmpty,
+      false);
 
   @override
   Widget build(BuildContext context) {
@@ -65,7 +65,7 @@ class _CalculatorPageState extends State<CalculatorPage> {
                   width: double.infinity,
                   height: 40,
                   child: Text(
-                    _result.res,
+                    _viewModel.res,
                     textAlign: TextAlign.center,
                     style: TextStyle(fontSize: ProjectConstants.fontSize),
                   )),
@@ -122,9 +122,9 @@ class _CalculatorPageState extends State<CalculatorPage> {
   }
 
   void _onPressedOperatorButton(String operator) {
-    _result = _bloc.calculator(
+    _viewModel = _bloc.calculator(
         _numberAController.text, _numberBController.text, operator);
-    if (_result.isReturnInputParam) {
+    if (_viewModel.isReset) {
       _numberAController.text = ProjectConstants.stringEmpty;
       _numberBController.text = ProjectConstants.stringEmpty;
     }
